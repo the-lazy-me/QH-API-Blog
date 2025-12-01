@@ -398,3 +398,24 @@ h2.card-title {
         display: block;
     }
 }
+
+/* 页脚样式 */
+.footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.footer a:hover {
+    color: var(--text-primary);
+}
