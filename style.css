@@ -430,6 +430,19 @@ h2.card-title {
     transition: background 0.3s ease;
 }
 
+/* Detail links */
+.detail-link {
+    color: var(--accent-feature-text);
+    text-decoration: none;
+    word-break: break-all;
+    transition: opacity 0.2s ease;
+}
+
+.detail-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
 /* 移动端适配 */
 @media (max-width: 768px) {
     .container {

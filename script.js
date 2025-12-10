@@ -1,3 +1,15 @@
+// --- Link Rendering ---
+/**
+ * Convert URLs in text to clickable hyperlinks
+ * @param {string} text - The text that may contain URLs
+ * @returns {string} - HTML string with URLs converted to anchor tags
+ */
+function linkify(text) {
+    // URL regex pattern matching http:// or https:// URLs
+    const urlPattern = /(https?:\/\/[^\s<>"']+)/g;
+    return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="detail-link">$1</a>');
+}
+
 // --- Data Source Configuration ---
 const DATA_SOURCES = {
     qh_api: {
@@ -337,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (item.details && item.details.length > 0) {
                 detailsHtml = '<ul class="card-details">';
                 item.details.forEach(detail => {
-                    detailsHtml += `<li>${detail}</li>`;
+                    detailsHtml += `<li>${linkify(detail)}</li>`;
                 });
                 detailsHtml += '</ul>';
             }
