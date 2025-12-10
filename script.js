@@ -1,3 +1,73 @@
+// --- Data Source Configuration ---
+const DATA_SOURCES = {
+    qh_api: {
+        id: 'qh_api',
+        name: '启航 AI 系统',
+        file: 'data-qh_api.json'
+    },
+    easy_ai: {
+        id: 'easy_ai',
+        name: 'Easy AI APP',
+        file: 'data-easy_ai.json'
+    }
+};
+
+// --- Data Source Manager ---
+const DataSourceManager = {
+    currentSource: 'qh_api',
+    cache: new Map(),
+
+    /**
+     * Check if a data source is already loaded in cache
+     * @param {string} sourceId - The data source identifier
+     * @returns {boolean} - True if data is cached
+     */
+    isLoaded(sourceId) {
+        return this.cache.has(sourceId);
+    },
+
+    /**
+     * Get the file path for a data source
+     * @param {string} sourceId - The data source identifier
+     * @returns {string|null} - The file path or null if source doesn't exist
+     */
+    getFilePath(sourceId) {
+        const source = DATA_SOURCES[sourceId];
+        return source ? source.file : null;
+    },
+
+    /**
+     * Load data for a given source with lazy loading and caching
+     * @param {string} sourceId - The data source identifier
+     * @returns {Promise<Array>} - Promise resolving to the data array
+     */
+    async loadData(sourceId) {
+        // Check cache first - return cached data if available
+        if (this.cache.has(sourceId)) {
+            return this.cache.get(sourceId);
+        }
+
+        // Get file path for the source
+        const filePath = this.getFilePath(sourceId);
+        if (!filePath) {
+            throw new Error(`Unknown data source: ${sourceId}`);
+        }
+
+        // Fetch data from the file
+        const response = await fetch(filePath);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch data: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Store in cache for future use
+        this.cache.set(sourceId, data);
+
+        return data;
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const timelineContainer = document.getElementById('timeline-container');
     const themeToggle = document.getElementById('theme-toggle');
@@ -54,17 +124,207 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.addEventListener('click', toggleTheme);
     initTheme();
 
-    // --- Data Loading ---
-    fetch('data.json')
-        .then(response => response.json())
-        .then(data => {
+    // --- URL Parameter Handling ---
+    /**
+     * Get data source from URL query parameter
+     * @returns {string} - Valid source ID or default 'qh_api'
+     */
+    function getSourceFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        const source = params.get('source');
+        // Validate parameter against DATA_SOURCES, return default if invalid
+        return DATA_SOURCES[source] ? source : 'qh_api';
+    }
+
+    /**
+     * Update URL query parameter without page refresh
+     * @param {string} sourceId - The data source identifier
+     */
+    function updateURLSource(sourceId) {
+        const url = new URL(window.location);
+        url.searchParams.set('source', sourceId);
+        window.history.replaceState({}, '', url);
+    }
+
+    // --- Data Source Switching ---
+    const dropdownTrigger = document.getElementById('data-source-trigger');
+    const dropdownMenu = document.getElementById('data-source-menu');
+    const dropdownText = dropdownTrigger.querySelector('.dropdown-text');
+    const dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
+
+    // Toggle dropdown open/close
+    function toggleDropdown() {
+        const isOpen = dropdownMenu.classList.contains('open');
+        if (isOpen) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
+    }
+
+    function openDropdown() {
+        dropdownMenu.classList.add('open');
+        dropdownTrigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeDropdown() {
+        dropdownMenu.classList.remove('open');
+        dropdownTrigger.setAttribute('aria-expanded', 'false');
+    }
+
+    // Handle dropdown trigger click
+    dropdownTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+
+    // Handle dropdown item selection
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const value = item.dataset.value;
+            const text = item.textContent;
+
+            // Update selected state
+            dropdownItems.forEach(i => {
+                i.classList.remove('selected');
+                i.setAttribute('aria-selected', 'false');
+            });
+            item.classList.add('selected');
+            item.setAttribute('aria-selected', 'true');
+
+            // Update trigger text
+            dropdownText.textContent = text;
+
+            // Close dropdown
+            closeDropdown();
+
+            // Switch data source
+            switchSource(value);
+        });
+    });
+
+    /**
+     * Show loading indicator in the timeline container
+     */
+    function showLoading() {
+        timelineContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">加载中...</p>';
+    }
+
+    /**
+     * Show error message in the timeline container
+     * @param {string} message - Error message to display
+     */
+    function showError(message) {
+        timelineContainer.innerHTML = `<p class="error-message" style="text-align:center; color: var(--text-secondary);">${message}</p>`;
+    }
+
+    /**
+     * Switch to a different data source
+     * @param {string} sourceId - The data source identifier to switch to
+     */
+    async function switchSource(sourceId) {
+        // Store current content to restore on error
+        const previousContent = timelineContainer.innerHTML;
+        const previousSource = DataSourceManager.currentSource;
+        
+        // Clear timeline container and show loading indicator
+        timelineContainer.innerHTML = '';
+        showLoading();
+
+        try {
+            // Load data for selected source
+            const data = await DataSourceManager.loadData(sourceId);
+            
+            // Update current source
+            DataSourceManager.currentSource = sourceId;
+            
+            // Update URL to reflect current selection
+            updateURLSource(sourceId);
+            
+            // Render timeline with new data
             renderTimeline(data);
             initIntersectionObserver();
-        })
-        .catch(error => {
-            console.error('Error loading data:', error);
-            timelineContainer.innerHTML = '<p style="text-align:center; color: var(--text-secondary);">加载更新日志失败，请检查 data.json 是否存在。</p>';
+        } catch (error) {
+            console.error('Error switching data source:', error);
+            
+            // Restore previous view state on error
+            timelineContainer.innerHTML = previousContent;
+            DataSourceManager.currentSource = previousSource;
+            
+            // Reset the dropdown to the previous source
+            const previousItem = dropdownMenu.querySelector(`[data-value="${previousSource}"]`);
+            if (previousItem) {
+                dropdownItems.forEach(i => {
+                    i.classList.remove('selected');
+                    i.setAttribute('aria-selected', 'false');
+                });
+                previousItem.classList.add('selected');
+                previousItem.setAttribute('aria-selected', 'true');
+                dropdownText.textContent = previousItem.textContent;
+            }
+            
+            // Show error message as an overlay/toast instead of replacing content
+            showErrorToast('加载更新日志失败，请稍后重试。');
+        }
+    }
+    
+    /**
+     * Show error message as a toast notification
+     * @param {string} message - Error message to display
+     */
+    function showErrorToast(message) {
+        // Remove any existing toast
+        const existingToast = document.querySelector('.error-toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = 'error-toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        // Trigger animation
+        requestAnimationFrame(() => {
+            toast.classList.add('visible');
         });
+        
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('visible');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+
+
+    // --- Initial Data Loading ---
+    // Get initial source from URL parameter or use default
+    const initialSource = getSourceFromURL();
+    DataSourceManager.currentSource = initialSource;
+
+    // Update dropdown to match initial source
+    const initialItem = dropdownMenu.querySelector(`[data-value="${initialSource}"]`);
+    if (initialItem) {
+        dropdownItems.forEach(i => {
+            i.classList.remove('selected');
+            i.setAttribute('aria-selected', 'false');
+        });
+        initialItem.classList.add('selected');
+        initialItem.setAttribute('aria-selected', 'true');
+        dropdownText.textContent = initialItem.textContent;
+    }
+
+    // Load initial data source
+    switchSource(initialSource);
 
     function renderTimeline(data) {
         let html = '';

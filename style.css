@@ -57,6 +57,96 @@ body {
     display: none; 
 }
 
+/* 数据源选择器 - 自定义下拉组件 */
+.data-source-selector {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    z-index: 100;
+}
+
+.dropdown-trigger {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.6rem 1rem;
+    border-radius: 22px;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown-trigger:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-hover);
+}
+
+.dropdown-trigger:focus {
+    outline: none;
+    border-color: var(--text-secondary);
+}
+
+.dropdown-trigger[aria-expanded="true"] {
+    border-color: var(--text-secondary);
+}
+
+.dropdown-arrow {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.dropdown-trigger[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-hover);
+    list-style: none;
+    padding: 0.5rem 0;
+    min-width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+.dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.dropdown-item:hover {
+    background: var(--border-color);
+}
+
+.dropdown-item.selected {
+    color: var(--accent-feature-text);
+    font-weight: 600;
+}
+
 /* 主题切换按钮 */
 .theme-toggle {
     position: absolute;
@@ -355,6 +445,26 @@ h2.card-title {
         right: 1.5rem;
     }
 
+    .data-source-selector {
+        top: 1.5rem;
+        left: 1.5rem;
+    }
+
+    .dropdown-trigger {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+        border-radius: 18px;
+    }
+
+    .dropdown-menu {
+        border-radius: 10px;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
     /* 移动端线在左侧 */
     .timeline::before {
         left: 16px;
@@ -418,4 +528,28 @@ h2.card-title {
 
 .footer a:hover {
     color: var(--text-primary);
+}
+
+
+/* Error Toast Notification */
+.error-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    background: var(--accent-hot-bg);
+    color: var(--accent-hot-text);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-hover);
+    z-index: 1000;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.error-toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
 }
