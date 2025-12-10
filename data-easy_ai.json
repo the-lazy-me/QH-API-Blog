@@ -1,13 +1,13 @@
 [
   {
-    "date": "2025.12.12",
+    "date": "2025.12.10",
     "type": "announcement",
-    "title": "Easy AI 正式上线",
+    "title": "Easy AI 正式上线(Beta 版)",
     "details": [
         "Easy AI：简单又强大",
         "启航 AI 推出的首个 AI 产品",
         "支持对话、绘图、音频生成等多种功能",
-        "下载地址：https://pan.thelazy.top/s/J2um"
+        "版本号：1.0.0"
     ]
   }
 ]
