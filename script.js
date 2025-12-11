@@ -354,6 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 detailsHtml += '</ul>';
             }
 
+            const versionHtml = item.version ? `<span class="card-version">${item.version}</span>` : '';
+
             html += `
                 <div class="timeline-item" style="--dot-color: var(${getTypeColorVar(item.type)})">
                     <div class="timeline-dot ${typeClass}"></div>
@@ -364,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h2 class="card-title">${item.title}</h2>
                         </div>
                         ${detailsHtml}
+                        ${versionHtml}
                     </div>
                 </div>
             `;

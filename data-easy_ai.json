@@ -3,6 +3,7 @@
     "date": "2025.12.11",
     "type": "announcement",
     "title": "Easy AI 更新(1.0.2)",
+    "version":"v1.0.2",
     "details": [
         "优化打字机动画效果",
         "版本号：1.0.2",
@@ -13,6 +14,7 @@
     "date": "2025.12.10",
     "type": "announcement",
     "title": "Easy AI 更新(1.0.1)",
+    "version":"v1.0.1",
     "details": [
         "修复初始化后模型列表获取失败的问题",
         "下载地址：https://pan.thelazy.top/s/J2um"
@@ -22,6 +24,7 @@
     "date": "2025.12.10",
     "type": "announcement",
     "title": "Easy AI 正式上线",
+    "version":"v1.0.0",
     "details": [
         "Easy AI：简单又强大",
         "启航 AI 推出的首个 AI 产品",
