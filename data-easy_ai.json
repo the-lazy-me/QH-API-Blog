@@ -2,6 +2,17 @@
   {
     "date": "2025.12.11",
     "type": "announcement",
+    "title": "Easy AI 更新(1.0.3)",
+    "version":"v1.0.3",
+    "details": [
+        "增加版本检测机制，自动提醒更新",
+        "版本号：1.0.3",
+        "下载地址：https://pan.thelazy.top/s/J2um"
+    ]
+  },
+  {
+    "date": "2025.12.11",
+    "type": "announcement",
     "title": "Easy AI 更新(1.0.2)",
     "version":"v1.0.2",
     "details": [
