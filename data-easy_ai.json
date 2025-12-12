@@ -1,4 +1,14 @@
-[
+[{
+    "date": "2025.12.12",
+    "type": "feature",
+    "title": "Easy AI 更新(1.1.1)",
+    "version": "v1.1.1",
+    "details": [
+      "修复语音无法生成的 Bug",
+      "版本号：1.1.1",
+      "下载地址：https://pan.thelazy.top/s/J2um?path=%2F1.1.1"
+    ]
+  },
   {
     "date": "2025.12.12",
     "type": "announcement",
@@ -8,7 +18,7 @@
       "新增功能：图生图（改图）功能",
       "优化若干细节体验",
       "版本号：1.1.0",
-      "下载地址：https://pan.thelazy.top/s/J2um"
+      "下载地址：https://pan.thelazy.top/s/J2um?path=%2F1.1.0"
     ]
   },
   {
@@ -19,7 +29,7 @@
     "details": [
       "增加版本检测机制，自动提醒更新",
       "版本号：1.0.3",
-      "下载地址：https://pan.thelazy.top/s/J2um"
+      "下载地址：https://pan.thelazy.top/s/J2um?path=%2F1.0.3"
     ]
   },
   {
@@ -30,7 +40,7 @@
     "details": [
       "优化打字机动画效果",
       "版本号：1.0.2",
-      "下载地址：https://pan.thelazy.top/s/J2um"
+      "下载地址：https://pan.thelazy.top/s/J2um?path=%2F1.0.2"
     ]
   },
   {
@@ -40,7 +50,7 @@
     "version": "v1.0.1",
     "details": [
       "修复初始化后模型列表获取失败的问题",
-      "下载地址：https://pan.thelazy.top/s/J2um"
+      "下载地址：https://pan.thelazy.top/s/J2um?path=%2F1.0.1"
     ]
   },
   {
@@ -53,7 +63,7 @@
       "启航 AI 推出的首个 AI 产品",
       "支持对话、绘图、音频生成等多种功能",
       "版本号：1.0.0",
-      "下载地址：https://pan.thelazy.top/s/J2um"
+      "下载地址：https://pan.thelazy.top/s/J2um?path=%2F1.0.0"
     ]
   }
 ]
